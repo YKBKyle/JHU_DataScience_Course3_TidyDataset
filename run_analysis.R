@@ -5,23 +5,22 @@ RootPath  <- "../UCI HAR Dataset"
 TrainPath <- paste0(RootPath,"/train")
 TestPath  <- paste0(RootPath,"/test")
 
+    # Define read function, making it easier for the later part
+ReadData <- function(x){read.table(x,header=FALSE,stringsAsFactors=FALSE)}
+
     # read features.txt and activity_labels.txt
-FeatureFile <- paste0(RootPath,"/features.txt")
-ActivityLabelFile <- paste0(RootPath,"/activity_labels.txt")
-Features <- read.table(FeatureFile, header = FALSE, stringsAsFactors = FALSE)
-ActivityLabel <- read.table(ActivityLabelFile,header=FALSE,stringsAsFactors=FALSE)
+Features <- ReadData(FeatureFile, paste0(RootPath,"/features.txt"))
+ActivityLabel <- ReadData(ActivityLabelFile, paste0(RootPath,"/activity_labels.txt"))
 
     # read x_train, y_train, subject_train
-TrainFiles <- dir(TrainPath, pattern = "txt") %>%
-              sapply(function(x){paste0(TrainPath,"/",x)})
-TrainData <-  lapply(TrainFiles,
-              function(x){read.table(x,header=FALSE,stringsAsFactors=FALSE)})
+TrainFiles <- dir(TrainPath, pattern = "txt")
+TrainFiles <- sapply(TrainFiles, function(x){paste0(TrainPath,"/",x)})
+TrainData <-  lapply(TrainFiles, ReadData)
 
     # read x_test, y_test, subject_test
-TestFiles <- dir(TestPath, pattern = "txt") %>%
-             sapply(function(x){paste0(TestPath,"/",x)})
-TestData <-  lapply(TestFiles,
-             function(x){read.table(x,header=FALSE,stringsAsFactors=FALSE)})
+TestFiles <- dir(TestPath, pattern = "txt")
+TestFiles <- sapply(TestFiles, function(x){paste0(TestPath,"/",x)})
+TestData <-  lapply(TestFiles, ReadData)
 
 ## 1. Merges the training and the test sets to create one data set
 XY_train <- mutate(TrainData$X_train.txt, label=TrainData$y_train.txt$V1)
@@ -35,3 +34,9 @@ names(IdXY_test)[1] <- "Id"
 IdXY_All <- rbind(IdXY_train, IdXY_test)
 
 ## 2. Get only the measurements on the mean and standard deviation for each measurement
+IsMeanHere <- grepl("mean",Features$V2)
+IsStdHere <- grepl("std",Features$V2)
+MeanStdIndex <- Features$V1[IsMeanHere | IsStdHere]
+MeanStd <- select(IdXY_All,MeanStdIndex+1)
+
+## 
