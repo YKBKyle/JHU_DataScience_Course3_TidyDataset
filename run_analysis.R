@@ -9,8 +9,8 @@ TestPath  <- paste0(RootPath,"/test")
 ReadData <- function(x){read.table(x,header=FALSE,stringsAsFactors=FALSE)}
 
     # read features.txt and activity_labels.txt
-Features <- ReadData(FeatureFile, paste0(RootPath,"/features.txt"))
-ActivityLabel <- ReadData(ActivityLabelFile, paste0(RootPath,"/activity_labels.txt"))
+Features <- ReadData(paste0(RootPath,"/features.txt"))
+ActivityLabel <- ReadData(paste0(RootPath,"/activity_labels.txt"))
 
     # read x_train, y_train, subject_train
 TrainFiles <- dir(TrainPath, pattern = "txt")
@@ -39,4 +39,19 @@ IsStdHere <- grepl("std",Features$V2)
 MeanStdIndex <- Features$V1[IsMeanHere | IsStdHere]
 MeanStd <- select(IdXY_All,MeanStdIndex+1)
 
-## 
+## 3. Uses descriptive activity names to name the activities in the data set
+Label <- character(nrow(IdXY_All))
+for (i in 1:nrow(ActivityLabel)){
+    Label[IdXY_All$label==ActivityLabel$V1[[i]]]<-ActivityLabel$V2[[i]]
+}
+IdXY_All$label <- Label
+
+## 4.Appropriately labels the data set with descriptive variable names
+Features$V1 <- paste0("V",as.character(Features$V1))
+VNameLoc <- grep("V",names(IdXY_All))
+VNames <- names(IdXY_All)[VNameLoc]
+names(IdXY_All)[VNameLoc] <-sapply(VNames,function(x){Features$V2[Features$V1 %in% x]})
+
+## 5. From the data set in step 4,
+ #creates a second, independent tidy data set
+ #with the average of each variable for each activity and each subject
