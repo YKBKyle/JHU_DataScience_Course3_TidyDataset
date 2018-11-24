@@ -1,6 +1,7 @@
 ## 0. read data
     # set up path parameters
 library(dplyr)
+library(reshape2)
 RootPath  <- "../UCI HAR Dataset"
 TrainPath <- paste0(RootPath,"/train")
 TestPath  <- paste0(RootPath,"/test")
@@ -48,6 +49,22 @@ IdXY_All$label <- Label
 
 ## 4.Appropriately labels the data set with descriptive variable names
 Features$V1 <- paste0("V",as.character(Features$V1))
+
+
+Features$V2 <- make.names(names = Features$V2, unique=TRUE, allow_=TRUE)
+# assign an order to duplicated feature names
+#  and turn feature names to syntactically valid names
+# for example:
+# temp <- c("fBodyAcc-bandsEnergy()-1,16",
+#           "fBodyAcc-bandsEnergy()-1,16",
+#           "fBodyAcc-bandsEnergy()-1,16");
+# temp2 <- make.names(names = temp, unique=TRUE, allow_=TRUE)
+# temp2 is as below:
+#                   [1] "fBodyAcc.bandsEnergy...1.16"
+#                   [2] "fBodyAcc.bandsEnergy...1.16.1"
+#                   [3] "fBodyAcc.bandsEnergy...1.16.2"
+
+
 VNameLoc <- grep("V",names(IdXY_All))
 VNames <- names(IdXY_All)[VNameLoc]
 names(IdXY_All)[VNameLoc] <-sapply(VNames,function(x){Features$V2[Features$V1 %in% x]})
@@ -55,3 +72,5 @@ names(IdXY_All)[VNameLoc] <-sapply(VNames,function(x){Features$V2[Features$V1 %i
 ## 5. From the data set in step 4,
  #creates a second, independent tidy data set
  #with the average of each variable for each activity and each subject
+IdXY_All2 <- group_by(IdXY_All,Id,label)
+temp <- summarise(IdXY_All2,mean=mean(fBodyBodyGyroJerkMag-min))
