@@ -70,7 +70,8 @@ VNames <- names(IdXY_All)[VNameLoc]
 names(IdXY_All)[VNameLoc] <-sapply(VNames,function(x){Features$V2[Features$V1 %in% x]})
 
 ## 5. From the data set in step 4,
- #creates a second, independent tidy data set
- #with the average of each variable for each activity and each subject
-IdXY_All2 <- group_by(IdXY_All,Id,label)
-temp <- summarise(IdXY_All2,mean=mean(fBodyBodyGyroJerkMag-min))
+ # creates a second, independent tidy data set
+ # with the average of each variable for each activity and each subject
+IdXY_All2 <- melt(IdXY_All, id.vars = c("Id","label"))
+IdXY_All2 <- dcast(IdXY_All2, Id + label ~ variable, fun.aggregate = mean)
+names(IdXY_All2)[c(-1,-2)] <- paste0("Mean.",names(IdXY_All2)[c(-1,-2)])
