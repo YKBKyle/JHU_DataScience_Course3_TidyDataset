@@ -4,6 +4,7 @@
 There are 563 columns and 180 rows in the tidy dataset. And there are 30 subjects in this experiment. Each subject performed 6 activities (WALKING, WALKING UPSTAIRS, WALKING DOWNSTAIRS, SITTING, STANDING, LAYING).
 
 The first 2 columns of the tidy dataset are Id and label:
+	
 	Id: the identification of the subjects
 	    specified by an integer, ranged from 1 to 30
 
