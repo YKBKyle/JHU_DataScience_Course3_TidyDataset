@@ -75,3 +75,6 @@ names(IdXY_All)[VNameLoc] <-sapply(VNames,function(x){Features$V2[Features$V1 %i
 IdXY_All2 <- melt(IdXY_All, id.vars = c("Id","label"))
 IdXY_All2 <- dcast(IdXY_All2, Id + label ~ variable, fun.aggregate = mean)
 names(IdXY_All2)[c(-1,-2)] <- paste0("Mean.",names(IdXY_All2)[c(-1,-2)])
+
+## 6. Output the dataset IdXY_All2
+write.table(IdXY_All2, file = "TidyDataset.txt", row.name=FALSE)
