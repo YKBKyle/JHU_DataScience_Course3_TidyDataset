@@ -1,6 +1,7 @@
 ## Analysis Steps
 
 All the analysis steps are contains in the file run_analysis.R
+
 Steps are as below:
 	
 	Step 0: load library dplyr and reshape2
