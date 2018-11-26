@@ -38,14 +38,15 @@ IdXY_All <- rbind(IdXY_train, IdXY_test)
 IsMeanHere <- grepl("mean",Features$V2)
 IsStdHere <- grepl("std",Features$V2)
 MeanStdIndex <- Features$V1[IsMeanHere | IsStdHere]
-MeanStd <- select(IdXY_All,MeanStdIndex+1)
+MeanStdName <- c("Id","label",names(IdXY_All)[MeanStdIndex+1])
+MeanStd <- IdXY_All[MeanStdName]
 
 ## 3. Uses descriptive activity names to name the activities in the data set
-Label <- character(nrow(IdXY_All))
+Label <- character(nrow(MeanStd))
 for (i in 1:nrow(ActivityLabel)){
-    Label[IdXY_All$label==ActivityLabel$V1[[i]]]<-ActivityLabel$V2[[i]]
+    Label[MeanStd$label==ActivityLabel$V1[[i]]]<-ActivityLabel$V2[[i]]
 }
-IdXY_All$label <- Label
+MeanStd$label <- Label
 
 ## 4.Appropriately labels the data set with descriptive variable names
 Features$V1 <- paste0("V",as.character(Features$V1))
@@ -65,16 +66,16 @@ Features$V2 <- make.names(names = Features$V2, unique=TRUE, allow_=TRUE)
 #                   [3] "fBodyAcc.bandsEnergy...1.16.2"
 
 
-VNameLoc <- grep("V",names(IdXY_All))
-VNames <- names(IdXY_All)[VNameLoc]
-names(IdXY_All)[VNameLoc] <-sapply(VNames,function(x){Features$V2[Features$V1 %in% x]})
+VNameLoc <- grep("V",names(MeanStd))
+VNames <- names(MeanStd)[VNameLoc]
+names(MeanStd)[VNameLoc] <-sapply(VNames,function(x){Features$V2[Features$V1 %in% x]})
 
 ## 5. From the data set in step 4,
  # creates a second, independent tidy data set
  # with the average of each variable for each activity and each subject
-IdXY_All2 <- melt(IdXY_All, id.vars = c("Id","label"))
-IdXY_All2 <- dcast(IdXY_All2, Id + label ~ variable, fun.aggregate = mean)
-names(IdXY_All2)[c(-1,-2)] <- paste0("Mean.",names(IdXY_All2)[c(-1,-2)])
+MeanStd2 <- melt(MeanStd, id.vars = c("Id","label"))
+MeanStd2 <- dcast(MeanStd2, Id + label ~ variable, fun.aggregate = mean)
+names(MeanStd2)[c(-1,-2)] <- paste0("Mean.",names(MeanStd2)[c(-1,-2)])
 
 ## 6. Output the dataset IdXY_All2
-write.table(IdXY_All2, file = "TidyDataset.txt", row.name=FALSE)
+write.table(MeanStd2, file = "TidyDataset.txt", row.name=FALSE)
