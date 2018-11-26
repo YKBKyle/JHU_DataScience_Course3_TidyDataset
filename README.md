@@ -2,9 +2,9 @@
 
 This repo contains 3 files: README.md, CodeBook.md and run_analysis.R
 
-README.md:      explain the analysis steps in run_analysis.R
-CodeBook.md:    explain the variables in the tidy dataset
-run_analysis.R: the R file to perform the analysis
+	README.md:      explain the analysis steps in run_analysis.R
+	CodeBook.md:    explain the variables in the tidy dataset
+	run_analysis.R: the R file to perform the analysis
 
 All the analysis steps are contains in the file run_analysis.R
 
