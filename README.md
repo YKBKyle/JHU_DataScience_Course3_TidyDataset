@@ -1,5 +1,11 @@
 ## Analysis Steps
 
+This repo contains 3 files: README.md, CodeBook.md and run_analysis.R
+
+README.md:      explain the analysis steps in run_analysis.R
+CodeBook.md:    explain the variables in the tidy dataset
+run_analysis.R: the R file to perform the analysis
+
 All the analysis steps are contains in the file run_analysis.R
 
 Steps are as below:
@@ -31,13 +37,13 @@ Steps are as below:
 
 	Step 4: convert Features$V2 to syntatically valid
 		and assign an order to dupliated feature names
-		re-assign the column names of IdXY_All as Feature$V2
+		re-assign the column names of MeanStd as Feature$V2
 
-	Step 5: covert IdXY_All from wide data to long data: IdXY_All2
+	Step 5: covert MeanStd from wide data to long data: MeanStd2
 		using function melt, set id.vars=c("Id","label")
 
-		covert IdXY_All2 back from long data to wide data
+		covert MeanStd2 back from long data to wide data
 		and calculate mean on every column for each combination of Id and label
 
-	Step 6: output tidy data set IdXY_All2 to file TidyDataset.txt
-		without rownames of IdXY_All2
+	Step 6: output tidy data set MeanStd2 to file TidyDataset.txt
+		without rownames of MeanStd2
